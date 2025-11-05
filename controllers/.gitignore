@@ -4,9 +4,9 @@ node_modules/
 # Environment variables
 .env
 
-# Log files
+# Logs
 *.log
 
-# OS junk
+# OS-specific files
 .DS_Store
 Thumbs.db
