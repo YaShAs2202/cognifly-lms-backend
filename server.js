@@ -1,4 +1,18 @@
 // server.js
+import reportRoutes from "./routes/reportRoutes.js";
+// ...
+app.use("/api/reports", reportRoutes);
+
+import certificateRoutes from "./routes/certificateRoutes.js";
+
+// ...
+app.use("/api/certificates", certificateRoutes);
+
+// also expose uploads so PDFs can be read
+import path from "path";
+import express from "express";
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
 import dotenv from "dotenv";
 dotenv.config();
 
