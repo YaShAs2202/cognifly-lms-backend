@@ -6,6 +6,10 @@ import mongoose from "mongoose";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import courseRoutes from "./routes/courseRoutes.js";
+import enrollmentRoutes from "./routes/enrollmentRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
+
 
 // Route imports
 import authRoutes from "./routes/authRoutes.js";
@@ -30,6 +34,9 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 // app.use("/api/certificates", certificateRoutes);
 // app.use("/api/reports", reportRoutes);
+   app.use("/api/courses", courseRoutes);
+   app.use("/api/enrollments", enrollmentRoutes);
+  app.use("/api/payment", paymentRoutes);
 
 // ✅ Serve static files (e.g., PDFs, uploads)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
