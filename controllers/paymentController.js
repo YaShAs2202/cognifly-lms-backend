@@ -1,6 +1,10 @@
-import Enrollment from "../models/Enrollment.js";
+// server/controllers/paymentController.js
 
-// Confirm payment & enroll user
+import Enrollment from "../models/Enrollment.js";
+import Course from "../models/Course.js";
+import User from "../models/User.js";
+
+// CONFIRM PAYMENT + ENROLL STUDENT
 export const confirmPaymentAndEnroll = async (req, res) => {
   try {
     const { userId, courseId } = req.body;
@@ -9,34 +13,62 @@ export const confirmPaymentAndEnroll = async (req, res) => {
       return res.status(400).json({ msg: "Missing userId or courseId" });
     }
 
-    // Check if already enrolled
-    const exists = await Enrollment.findOne({ userId, courseId });
-
-    if (exists) {
-      return res.status(400).json({ msg: "Already enrolled in this course" });
+    // Check if course exists
+    const courseExists = await Course.findById(courseId);
+    if (!courseExists) {
+      return res.status(404).json({ msg: "Course not found" });
     }
 
-    // Create enrollment
-    const newEnrollment = new Enrollment({ userId, courseId });
+    // Check if user exists
+    const userExists = await User.findById(userId);
+    if (!userExists) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Prevent duplicate enrollment
+    const alreadyEnrolled = await Enrollment.findOne({ userId, courseId });
+
+    if (alreadyEnrolled) {
+      return res.json({
+        success: true,
+        msg: "Already enrolled",
+      });
+    }
+
+    // Create new enrollment
+    const newEnrollment = new Enrollment({
+      userId,
+      courseId,
+    });
+
     await newEnrollment.save();
 
-    res.json({ msg: "Payment successful! Enrollment saved.", enrollment: newEnrollment });
+    return res.json({
+      success: true,
+      msg: "Enrollment successful",
+      enrollment: newEnrollment,
+    });
+
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: "Server error during payment" });
+    console.error("Payment Enrollment Error:", error);
+    res.status(500).json({ msg: "Server error during enrollment" });
   }
 };
 
-// Fetch enrolled courses
+// GET ALL COURSES USER IS ENROLLED IN
 export const getUserEnrolledCourses = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const enrolled = await Enrollment.find({ userId }).populate("courseId");
+    // Find all enrollments for user
+    const enrollments = await Enrollment.find({ userId }).populate("courseId");
 
-    res.json({ courses: enrolled.map((e) => e.courseId) });
+    return res.json({
+      success: true,
+      courses: enrollments.map((enroll) => enroll.courseId),
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: "Cannot fetch enrolled courses" });
+    console.error("Fetch Enrolled Courses Error:", error);
+    res.status(500).json({ msg: "Server error fetching enrolled courses" });
   }
 };

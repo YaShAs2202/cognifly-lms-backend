@@ -2,15 +2,20 @@ import mongoose from "mongoose";
 
 const enrollmentSchema = new mongoose.Schema(
   {
-    userId: {
+    student: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    courseId: {
+    course: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Course",
       required: true,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "manual-paid", "paid"],
+      default: "pending",
     },
     enrolledAt: {
       type: Date,

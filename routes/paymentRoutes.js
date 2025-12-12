@@ -1,12 +1,15 @@
 import express from "express";
-import { confirmPaymentAndEnroll, getUserEnrolledCourses } from "../controllers/paymentController.js";
+import {
+  confirmPaymentAndEnroll,
+  getUserEnrolledCourses,
+} from "../controllers/paymentController.js";
 
 const router = express.Router();
 
-// Confirm payment → enroll
+// POST: Confirm Payment + Enroll
 router.post("/confirm", confirmPaymentAndEnroll);
 
-// Get enrolled courses
+// GET: All enrolled courses for a user
 router.get("/enrolled/:userId", getUserEnrolledCourses);
 
 export default router;

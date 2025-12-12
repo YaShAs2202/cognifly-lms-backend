@@ -5,18 +5,25 @@ import {
   createCourse,
   getCourses,
   getCourseById,
+  updateCourse,
   deleteCourse,
-  addResourceToCourse,
+  addResourceToCourse
 } from "../controllers/courseController.js";
 
 const router = express.Router();
 
-router.post("/", protect, createCourse);
-router.get("/", getCourses);
-router.get("/:id", getCourseById);
-router.delete("/:id", protect, deleteCourse);
+/* --------------------------------------------------------
+   PUBLIC ROUTES
+---------------------------------------------------------*/
+router.get("/", getCourses);        // Get all courses
+router.get("/:id", getCourseById);  // Get one course
 
-// FIXED: Now this function exists and is imported
-router.post("/:id/add-resource", protect, addResourceToCourse);
+/* --------------------------------------------------------
+   PROTECTED ROUTES (Teacher / Admin)
+---------------------------------------------------------*/
+router.post("/", protect, createCourse);           // Create new course
+router.put("/:id", protect, updateCourse);         // Update a course
+router.delete("/:id", protect, deleteCourse);      // Delete a course
+router.post("/:id/add-resource", protect, addResourceToCourse); // Add resources
 
 export default router;

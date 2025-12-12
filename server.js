@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 import courseRoutes from "./routes/courseRoutes.js";
 import enrollmentRoutes from "./routes/enrollmentRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import lessonRoutes from "./routes/lessonRoutes.js";
 
 
 // Route imports
@@ -36,7 +37,9 @@ app.use("/api/auth", authRoutes);
 // app.use("/api/reports", reportRoutes);
    app.use("/api/courses", courseRoutes);
    app.use("/api/enrollments", enrollmentRoutes);
-  app.use("/api/payment", paymentRoutes);
+   app.use("/api/payment", paymentRoutes);
+   app.use("/api/lessons", lessonRoutes);
+
 
 // ✅ Serve static files (e.g., PDFs, uploads)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
